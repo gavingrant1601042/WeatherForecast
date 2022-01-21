@@ -50,88 +50,97 @@ namespace WebApplication.Services
         public void SaveWeatherData(WeatherData weatherData)
         {
             var Email = "";
-            var employeeData = _context.Employees.FirstOrDefault(c => c.Email == c.Email) ;
-            
 
-            if (employeeData != null)
+            var NumberofElements = _context.Employees
+                 .Where(c => c.Email == c.Email && c.empId == c.empId)
+                 .Select(c => new { c.Email, c.empId })
+                 .Count();
+        
+          
+            for (int i = 0; i < NumberofElements; i++)
             {
-                Console.Write("Error");
+                var employeeData = _context.Employees
+                 .Where(c => c.Email == c.Email && c.empId == c.empId)
+                 .Select(c => new { c.Email, c.empId })
+                 .ToList();
+
+                if (employeeData != null)
+                {
+                    Console.Write("Error");
+                }
+             
+                string Country = weatherData.City.Name.ToString();
+                string WdataDAYONE = weatherData.WeatherDataInfo[0].Weather[0].Description.ToString();
+                string WdataDAYTWO = weatherData.WeatherDataInfo[1].Weather[0].Description.ToString();
+                string WdataDAYTHREE = weatherData.WeatherDataInfo[2].Weather[0].Description.ToString();
+                string WdataDAYFOUR = weatherData.WeatherDataInfo[3].Weather[0].Description.ToString();
+                string WdataDAYFIVE = weatherData.WeatherDataInfo[4].Weather[0].Description.ToString();
+
+                string WdataOne = " Day 1 = |" + WdataDAYONE;
+                string WdataTwo = "Day 2 = |" + WdataDAYTWO;
+                string WdataThree = "Day 3 |= " + WdataDAYTHREE;
+                string WdataFour = "Day 4 |= " + WdataDAYFOUR;
+                string WdataFIVE = "Day 5 |=" + WdataDAYFIVE;
+
+                string Day_one = WeatherDecision(WdataDAYONE);
+                string Day_two = WeatherDecision(WdataDAYTWO);
+                string Day_three = WeatherDecision(WdataDAYTHREE);
+                string Day_four = WeatherDecision(WdataDAYFOUR);
+                string Day_five = WeatherDecision(WdataDAYFIVE);
+
+                string MailBody = "<!DOCTYPE html>" +
+                                 "<html> " +
+                                     "<body style=\"background -color:#ff7f26;text-align:center;\"> " +
+                                     "<h1 style=\"color:#051a80;\">Welcome to Weather Application</h1> " +
+                                     "<h2 style=\"color:#000000;\">The Weather for Day 1 .</h2> " +
+                                     @WdataOne +
+                                     @Day_one +
+                                    "<h2 style=\"color:#000000;\">The Weather for Day 2 .</h2> " +
+                                     @WdataTwo +
+                                     @Day_two +
+                                    "<h2 style=\"color:#000000;\">The Weather for Day 3 .</h2> " +
+                                     @WdataThree +
+                                     Day_three +
+                                     "<h2 style=\"color:#000000;\">The Weather for Day 4 .</h2> " +
+                                     @WdataFour +
+                                     @Day_four +
+                                     "<h2 style=\"color:#000000;\">The Weather for Day 5 .</h2> " +
+                                     @WdataFIVE +
+                                     @Day_five +
+                                     "</body> " +
+                                 "</html>";
+                string subject = "The Weather forecast for the next 5 days for " + Country;
+                string mailTitle = "KraceGennedy Weather Forecast";
+                string fromEmail = Configuration["Email"];
+                string fromEmailPassword = Configuration["Password"];
+
+                string toEmail = employeeData[i].Email.ToString();
+                //Email & Content 
+                MailMessage message = new MailMessage(new MailAddress(fromEmail, mailTitle), new MailAddress(toEmail));
+                message.Subject = subject;
+                message.Body = MailBody;
+                message.IsBodyHtml = true;
+
+
+                //Server Details
+                SmtpClient smtp = new SmtpClient();
+                //Outlook ports - 465 (SSL) or 587 (TLS)
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.UseDefaultCredentials = false;
+                smtp.EnableSsl = true;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+                //Credentials
+                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential();
+
+                credentials.UserName = fromEmail;
+                credentials.Password = fromEmailPassword;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = credentials;
+
+                smtp.Send(message);
             }
-            {
-                Email = employeeData.Email.ToString();
-            }
-            string Country = weatherData.City.Name.ToString();
-            string WdataDAYONE = weatherData.WeatherDataInfo[0].Weather[0].Description.ToString();
-            string WdataDAYTWO = weatherData.WeatherDataInfo[1].Weather[0].Description.ToString();
-            string WdataDAYTHREE = weatherData.WeatherDataInfo[2].Weather[0].Description.ToString();
-            string WdataDAYFOUR = weatherData.WeatherDataInfo[3].Weather[0].Description.ToString();
-            string WdataDAYFIVE = weatherData.WeatherDataInfo[4].Weather[0].Description.ToString();
-
-            string WdataOne= " Day 1 = |" + WdataDAYONE;
-            string WdataTwo = "Day 2 = |" + WdataDAYTWO;
-            string WdataThree = "Day 3 |= " + WdataDAYTHREE;
-            string WdataFour = "Day 4 |= " + WdataDAYFOUR;
-            string WdataFIVE = "Day 5 |=" + WdataDAYFIVE;
-
-            string Day_one = WeatherDecision(WdataDAYONE);
-            string Day_two = WeatherDecision(WdataDAYTWO);
-            string Day_three = WeatherDecision(WdataDAYTHREE);
-            string Day_four = WeatherDecision(WdataDAYFOUR);
-            string Day_five = WeatherDecision(WdataDAYFIVE);
-
-            string MailBody = "<!DOCTYPE html>" +
-                             "<html> " +
-                                 "<body style=\"background -color:#ff7f26;text-align:center;\"> " +
-                                 "<h1 style=\"color:#051a80;\">Welcome to Weather Application</h1> " +
-                                 "<h2 style=\"color:#000000;\">The Weather for Day 1 .</h2> " +
-                                 @WdataOne +
-                                 @Day_one+
-                                "<h2 style=\"color:#000000;\">The Weather for Day 2 .</h2> " +
-                                 @WdataTwo +
-                                 @Day_two+
-                                "<h2 style=\"color:#000000;\">The Weather for Day 3 .</h2> " +
-                                 @WdataThree +
-                                 Day_three+
-                                 "<h2 style=\"color:#000000;\">The Weather for Day 4 .</h2> " +
-                                 @WdataFour +
-                                 @Day_four+
-                                 "<h2 style=\"color:#000000;\">The Weather for Day 5 .</h2> " +
-                                 @WdataFIVE +
-                                 @Day_five+
-                                 "</body> " +
-                             "</html>";
-            string subject = "The Weather forecast for the next 5 days for " + Country;
-            string mailTitle = "KraceGennedy Weather Forecast";
-            string fromEmail = Configuration["Email"];
-            string fromEmailPassword = Configuration["Password"];
-
-            string toEmail = Email;
-            //Email & Content 
-            MailMessage message = new MailMessage(new MailAddress(fromEmail, mailTitle), new MailAddress(toEmail));
-            message.Subject = subject;
-            message.Body = MailBody;
-            message.IsBodyHtml = true;
-
-
-            //Server Details
-            SmtpClient smtp = new SmtpClient();
-            //Outlook ports - 465 (SSL) or 587 (TLS)
-            smtp.Host = "smtp.gmail.com";
-            smtp.Port = 587;
-            smtp.UseDefaultCredentials = false;
-            smtp.EnableSsl = true;
-            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-
-            //Credentials
-            System.Net.NetworkCredential credentials = new System.Net.NetworkCredential();
-
-            credentials.UserName = fromEmail;
-            credentials.Password = fromEmailPassword;
-            smtp.UseDefaultCredentials = false;
-            smtp.Credentials = credentials;
-
-            smtp.Send(message);
-
         }
         public string WeatherDecision(string emailmessagetodisplay)
         {
