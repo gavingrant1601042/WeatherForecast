@@ -7392,11 +7392,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Gavin Grant\\Desktop\\Weather_Application-main\\WebApplication\\WebApplication.csproj",
+      "projectUniqueName": "C:\\Users\\Gavin Grant\\Desktop\\New folder\\WebApplication\\WebApplication.csproj",
       "projectName": "WebApplication",
-      "projectPath": "C:\\Users\\Gavin Grant\\Desktop\\Weather_Application-main\\WebApplication\\WebApplication.csproj",
+      "projectPath": "C:\\Users\\Gavin Grant\\Desktop\\New folder\\WebApplication\\WebApplication.csproj",
       "packagesPath": "C:\\Users\\Gavin Grant\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Gavin Grant\\Desktop\\Weather_Application-main\\WebApplication\\obj\\",
+      "outputPath": "C:\\Users\\Gavin Grant\\Desktop\\New folder\\WebApplication\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Gavin Grant\\AppData\\Roaming\\NuGet\\NuGet.Config",

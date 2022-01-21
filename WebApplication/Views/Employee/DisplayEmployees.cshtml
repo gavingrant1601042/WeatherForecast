@@ -1,0 +1,60 @@
+﻿@model IEnumerable<WebApplication.Data.Employees>
+
+@{
+    ViewData["Title"] = "DisplayEmployees";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>DisplayEmployees</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lastname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpRoleID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location_ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lastname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpRoleID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            
+        </tr>
+}
+    </tbody>
+</table>

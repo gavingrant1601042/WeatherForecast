@@ -20,7 +20,7 @@ namespace WebApplication.Controllers
         {
             _logger = logger;
             _context = context;
-            _rs = new RestService(_context);
+            _rs = new RestService(_context, _configuration);
             Configuration = _configuration;
         }
 
@@ -43,7 +43,7 @@ namespace WebApplication.Controllers
         public IActionResult WeatherData(string id)
         {
             var apikey = Configuration["MyAPIKEY"];
-            string weatherapiData = "https://api.openweathermap.org/data/2.5/forecast?q=+" + id + "&units=metric&appid=7b415af837daa9f56ea28425c81f0966";
+            string weatherapiData = "https://api.openweathermap.org/data/2.5/forecast?q=+" + id + "&units=metric&appid=" +apikey;
 
             WeatherData results = _rs.GetWeatherData(weatherapiData).Result;
            

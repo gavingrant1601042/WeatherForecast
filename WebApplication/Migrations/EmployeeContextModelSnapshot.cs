@@ -19,28 +19,75 @@ namespace WebApplication.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("WebApplication.Models.City", b =>
+            modelBuilder.Entity("WebApplication.Data.EmployeeLocation", b =>
                 {
-                    b.Property<long>("id")
+                    b.Property<int>("LocationID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("id");
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("City");
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LocationID");
+
+                    b.ToTable("Location");
                 });
 
-            modelBuilder.Entity("WebApplication.Models.Employee", b =>
+            modelBuilder.Entity("WebApplication.Data.EmployeePhoneNumber", b =>
                 {
-                    b.Property<string>("EmailId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("EmployeePhoneNumber_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
 
-                    b.Property<string>("telephone")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EmployeePhoneNumber_ID");
+
+                    b.ToTable("PhoneNumber");
+                });
+
+            modelBuilder.Entity("WebApplication.Data.EmployeeRole", b =>
+                {
+                    b.Property<int>("EmpRoleID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EmpRoleID");
+
+                    b.ToTable("Role");
+                });
+
+            modelBuilder.Entity("WebApplication.Data.Employees", b =>
+                {
+                    b.Property<int>("empId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EmpRoleID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EmployeeLocationLocationID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EmployeePhoneNumber_ID")
+                        .HasColumnType("int");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -48,55 +95,60 @@ namespace WebApplication.Migrations
                     b.Property<string>("Lastname")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("address_location")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("city")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("country")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("role")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("EmailId", "telephone");
-
-                    b.ToTable("Employee");
-                });
-
-            modelBuilder.Entity("WebApplication.Models.WeatherData", b =>
-                {
-                    b.Property<long?>("Cityid")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("TimeStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("cod")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("timezone")
+                    b.Property<int>("Location_ID")
                         .HasColumnType("int");
 
-                    b.HasIndex("Cityid");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Weather");
+                    b.Property<int?>("RoleEmpRoleID")
+                        .HasColumnType("int");
+
+                    b.HasKey("empId");
+
+                    b.HasIndex("EmployeeLocationLocationID");
+
+                    b.HasIndex("EmployeePhoneNumber_ID");
+
+                    b.HasIndex("RoleEmpRoleID");
+
+                    b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("WebApplication.Models.WeatherData", b =>
+            modelBuilder.Entity("WebApplication.Data.Employees", b =>
                 {
-                    b.HasOne("WebApplication.Models.City", "City")
-                        .WithMany()
-                        .HasForeignKey("Cityid");
+                    b.HasOne("WebApplication.Data.EmployeeLocation", "EmployeeLocation")
+                        .WithMany("Employee")
+                        .HasForeignKey("EmployeeLocationLocationID");
 
-                    b.Navigation("City");
+                    b.HasOne("WebApplication.Data.EmployeePhoneNumber", "EmployeePhoneNumber")
+                        .WithMany("Employee")
+                        .HasForeignKey("EmployeePhoneNumber_ID");
+
+                    b.HasOne("WebApplication.Data.EmployeeRole", "Role")
+                        .WithMany("Employee")
+                        .HasForeignKey("RoleEmpRoleID");
+
+                    b.Navigation("EmployeeLocation");
+
+                    b.Navigation("EmployeePhoneNumber");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("WebApplication.Data.EmployeeLocation", b =>
+                {
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("WebApplication.Data.EmployeePhoneNumber", b =>
+                {
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("WebApplication.Data.EmployeeRole", b =>
+                {
+                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }

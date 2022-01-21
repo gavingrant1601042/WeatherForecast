@@ -1,0 +1,34 @@
+﻿@model IEnumerable<WebApplication.Data.EmployeeRole>
+
+@{
+    ViewData["Title"] = "DisplayRole";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>DisplayRole</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EmpRoleID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.EmpRoleID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.EmpRoleID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

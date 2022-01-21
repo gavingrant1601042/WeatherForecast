@@ -17,16 +17,17 @@ namespace WebApplication.Services
     {
         HttpClient _client;
         private readonly EmployeeContext _context;
-     
+        private IConfiguration Configuration { get; set; }
 
 
-        public RestService(EmployeeContext context)
+        public RestService(EmployeeContext context, IConfiguration _configuration)
         {
             _context = context;
             _client = new HttpClient();
-
+            Configuration = _configuration;
+            
         }
-
+        
         public async Task<WeatherData> GetWeatherData(string query)
         {
             WeatherData weatherData = null;
@@ -44,12 +45,21 @@ namespace WebApplication.Services
             {
                 throw (ex);
             }
-            
-
             return weatherData;
         }
         public void SaveWeatherData(WeatherData weatherData)
         {
+            var Email = "";
+            var employeeData = _context.Employees.FirstOrDefault(c => c.Email == c.Email) ;
+            
+
+            if (employeeData != null)
+            {
+                Console.Write("Error");
+            }
+            {
+                Email = employeeData.Email.ToString();
+            }
             string Country = weatherData.City.Name.ToString();
             string WdataDAYONE = weatherData.WeatherDataInfo[0].Weather[0].Description.ToString();
             string WdataDAYTWO = weatherData.WeatherDataInfo[1].Weather[0].Description.ToString();
@@ -57,22 +67,17 @@ namespace WebApplication.Services
             string WdataDAYFOUR = weatherData.WeatherDataInfo[3].Weather[0].Description.ToString();
             string WdataDAYFIVE = weatherData.WeatherDataInfo[4].Weather[0].Description.ToString();
 
-            string WdataOne= " Day 1 = " + WdataDAYONE;
-            string WdataTwo = "Day 2 = " + WdataDAYTWO;
-            string WdataThree = "Day 3 = " + WdataDAYTHREE;
-            string WdataFour = "Day 4 = " + WdataDAYFOUR;
-            string WdataFIVE = "Day 5 =" + WdataDAYFIVE;
+            string WdataOne= " Day 1 = |" + WdataDAYONE;
+            string WdataTwo = "Day 2 = |" + WdataDAYTWO;
+            string WdataThree = "Day 3 |= " + WdataDAYTHREE;
+            string WdataFour = "Day 4 |= " + WdataDAYFOUR;
+            string WdataFIVE = "Day 5 |=" + WdataDAYFIVE;
 
             string Day_one = WeatherDecision(WdataDAYONE);
             string Day_two = WeatherDecision(WdataDAYTWO);
             string Day_three = WeatherDecision(WdataDAYTHREE);
             string Day_four = WeatherDecision(WdataDAYFOUR);
             string Day_five = WeatherDecision(WdataDAYFIVE);
-
-
-
-
-
 
             string MailBody = "<!DOCTYPE html>" +
                              "<html> " +
@@ -97,10 +102,10 @@ namespace WebApplication.Services
                              "</html>";
             string subject = "The Weather forecast for the next 5 days for " + Country;
             string mailTitle = "KraceGennedy Weather Forecast";
-            string fromEmail = "gavingrant691xyz@gmail.com";
-            string fromEmailPassword = "Postaltekken1234567890@";
+            string fromEmail = Configuration["Email"];
+            string fromEmailPassword = Configuration["Password"];
 
-            string toEmail = "gavingrant691@gmail.com";
+            string toEmail = Email;
             //Email & Content 
             MailMessage message = new MailMessage(new MailAddress(fromEmail, mailTitle), new MailAddress(toEmail));
             message.Subject = subject;
@@ -113,6 +118,7 @@ namespace WebApplication.Services
             //Outlook ports - 465 (SSL) or 587 (TLS)
             smtp.Host = "smtp.gmail.com";
             smtp.Port = 587;
+            smtp.UseDefaultCredentials = false;
             smtp.EnableSsl = true;
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
 

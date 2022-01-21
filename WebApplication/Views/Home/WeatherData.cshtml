@@ -1,36 +1,50 @@
 ﻿@model WeatherData
-@{ Layout = "_Layout"; ViewBag.Title = "Weather Application";}
+@{
+    Layout = "_Layout"; ViewBag.Title = "Weather Application";
+
+}
 
 @try
 {
-    <h2>Weather Information For Country : @Model.City.Name</h2>
+    <h2>Weather Forecast Information For Country : @Model.City.Name</h2>
     string tipoMeteo = "";
-    switch (Model.WeatherDataInfo[5].Weather[0].Visibility.ToString())
+    @for (int i = 0; i < 4; i++)
     {
-        case "Rain": tipoMeteo = "Rainy 🌧"; break;
-        case "Clear": tipoMeteo = "Sunny! ☀"; break;
-        case "Clouds": tipoMeteo = "Cloudy ⛅"; break;
+        switch (Model.WeatherDataInfo[i].Weather[0].Visibility.ToString())
+        {
+            case "Rain": tipoMeteo = "Rainy 🌧"; break;
+            case "Clear": tipoMeteo = "Sunnysa! ☀"; break;
+            case "Clouds": tipoMeteo = "Cloudy ⛅"; break;
+        }
     }
+
+
     <table class="table table-sm table-striped table-bordered m-2">
         <thead><tr><th>Weather</th><th>Temperature</th><th>Humidity</th><th>Perceived Temperature</th><th>Wind</th></tr></thead>
         <tbody>
 
+            @for (int i=0; i<4; i++){
             <tr>
-              <td>@tipoMeteo </td>
-              <td>@Model.WeatherDataInfo[5].Main.Temperature °C</td>
-              <td>@Model.WeatherDataInfo[5].Main.Humidity%</td>
-               <td>@Model.WeatherDataInfo[5].Main.Percepita°C</td>
-               <td>@Model.WeatherDataInfo[5].Wind.Speed Nodi</td>
+              <td>@Model.WeatherDataInfo[i].Weather[0].Visibility.ToString()</td>
+              <td>@Model.WeatherDataInfo[i].Main.Temperature °C</td>
+              <td>@Model.WeatherDataInfo[i].Main.Humidity%</td>
+               <td>@Model.WeatherDataInfo[i].Main.Percepita°C</td>
+               <td>@Model.WeatherDataInfo[i].Wind.Speed Nodi</td>
             </tr>
-
+            }
 
         </tbody>
     </table>
     <br />
     <a asp-action="" class="btn btn-sm btn-primary">Search Again!</a>
     <br />
-   @switch (Model.WeatherDataInfo[5].Weather[0].Visibility.ToString())
+     @for (int i = 0; i < 5; i++){
+        <h3>Day @(i+1)</h3>
+        <h3>@Model.WeatherDataInfo[i].Weather[0].Visibility.ToString()</h3>
+   @switch (Model.WeatherDataInfo[i].Weather[0].Visibility.ToString())
     {
+        
+
         case "Clear":
             <img src="~/Images/sunny.jpg" height="400" width="700">
             ; break;
@@ -41,6 +55,7 @@
                 <img src="~/Images/rainy.jpg" height="400" width="700">
                 ; break;
         }
+     }
 }
 catch
 {

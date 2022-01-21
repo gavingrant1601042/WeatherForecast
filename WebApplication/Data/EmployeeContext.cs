@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication.Data;
 
 namespace WebApplication.Models
 {
@@ -11,16 +12,13 @@ namespace WebApplication.Models
         public EmployeeContext(DbContextOptions<EmployeeContext> options) : base(options)
         {
         }
-        public DbSet<Employee> Employee{ get; set;}
-        public DbSet<WeatherData> Weather { get; set; }
-
+        public DbSet<Employees> Employees { get; set; }
+        public DbSet<EmployeeRole> Role { get; set; }
+        public DbSet<EmployeeLocation> Location { get; set; }
+        public DbSet<EmployeePhoneNumber> PhoneNumber { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>()
-                .HasKey(c => new { c.EmailId, c.telephone });
-
-            modelBuilder.Entity<WeatherData>()
-               .HasNoKey();
+ 
 
         }
     }
